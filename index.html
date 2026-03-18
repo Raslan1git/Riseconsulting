@@ -3,13 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RISE Consulting | Business Scaling Scorecard - Strategic Diagnostic for CEOs & Founders</title>
+    <title>RISE Consulting.AE | Business Scaling Scorecard - Strategic Diagnostic for CEOs & Founders</title>
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Font Awesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <!-- html2canvas for PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- jspdf -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
         /* ===== MASTER STYLE SYSTEM ===== */
         :root {
@@ -42,21 +46,9 @@
             --success: #2D6A4F;
             --warning: #D4AF37;
             --danger: #B23B3B;
+            --info: #40916C;
             --font-serif: 'Cormorant Garamond', serif;
             --font-sans: 'Inter', sans-serif;
-            --space-xs: 8px;
-            --space-sm: 12px;
-            --space-md: 16px;
-            --space-lg: 24px;
-            --space-xl: 32px;
-            --space-2xl: 40px;
-            --space-3xl: 48px;
-            --radius-md: 12px;
-            --radius-lg: 16px;
-            --radius-xl: 24px;
-            --radius-full: 9999px;
-            --shadow-lg: 0 16px 24px rgba(0,0,0,0.08);
-            --shadow-xl: 0 24px 32px rgba(0,0,0,0.12);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -71,10 +63,10 @@
 
         .container { max-width: 1400px; margin: 0 auto; padding: 0 40px; }
 
-        /* ===== YOUR EXACT LOGO STYLING ===== */
+        /* ===== YOUR EXACT LOGO: RISE over CONSULTING.AE ===== */
         .brand-header {
             padding: 30px 0;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
             border-bottom: 3px solid var(--gold-600);
             display: flex;
             justify-content: space-between;
@@ -88,31 +80,35 @@
             flex-direction: column;
         }
 
-        /* YOUR LOGO - EXACT MATCH */
         .logo-rise {
             font-family: var(--font-serif);
-            font-size: 48px;
+            font-size: 54px;
             font-weight: 800;
-            line-height: 1;
+            line-height: 0.9;
             color: var(--forest-900);
             letter-spacing: 2px;
         }
 
         .logo-rise span {
             color: var(--gold-600);
+            font-size: 64px;
         }
 
         .logo-consulting {
             font-family: var(--font-sans);
-            font-size: 16px;
+            font-size: 18px;
             font-weight: 500;
-            letter-spacing: 8px;
+            letter-spacing: 6px;
             color: var(--charcoal-600);
-            margin-top: 4px;
+            margin-top: 2px;
             text-transform: uppercase;
         }
 
-        /* Tagline */
+        .logo-consulting span {
+            color: var(--gold-600);
+            font-weight: 700;
+        }
+
         .tagline-container {
             text-align: right;
         }
@@ -136,348 +132,28 @@
             margin-top: 4px;
         }
 
-        /* ===== CLIENT-CENTRIC HERO SECTION ===== */
-        .hero-section {
-            background: linear-gradient(135deg, var(--forest-900) 0%, var(--forest-800) 100%);
-            border-radius: var(--radius-xl);
-            padding: 60px;
-            margin-bottom: 40px;
-            color: white;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero-section::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(212,175,55,0.1) 0%, transparent 70%);
-            animation: rotate 60s linear infinite;
-        }
-
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        .hero-grid {
-            display: grid;
-            grid-template-columns: 1.5fr 1fr;
-            gap: 60px;
-            position: relative;
-            z-index: 2;
-        }
-
-        .hero-title {
-            font-family: var(--font-serif);
-            font-size: 52px;
-            font-weight: 700;
-            line-height: 1.2;
-            margin-bottom: 25px;
-        }
-
-        .hero-title span {
-            color: var(--gold-600);
-            border-bottom: 3px solid var(--gold-600);
-            padding-bottom: 5px;
-        }
-
-        .hero-text {
-            font-size: 18px;
-            opacity: 0.95;
-            margin-bottom: 30px;
-            max-width: 600px;
-        }
-
-        .target-badges {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            margin-bottom: 30px;
-        }
-
-        .target-badge {
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
-            padding: 10px 20px;
-            border-radius: var(--radius-full);
-            font-size: 15px;
-            border: 1px solid rgba(255,255,255,0.2);
-        }
-
-        .target-badge i {
-            color: var(--gold-600);
-            margin-right: 8px;
-        }
-
-        .value-prop {
-            background: rgba(255,255,255,0.05);
-            border-radius: var(--radius-lg);
-            padding: 30px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .value-prop-item {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .value-prop-item:last-child {
-            margin-bottom: 0;
-        }
-
-        .value-icon {
-            width: 50px;
-            height: 50px;
-            background: var(--gold-600);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--forest-900);
-            font-size: 20px;
-            flex-shrink: 0;
-        }
-
-        .value-text h4 {
-            color: var(--gold-600);
-            margin-bottom: 5px;
-            font-size: 18px;
-        }
-
-        .value-text p {
-            opacity: 0.9;
-            font-size: 15px;
-        }
-
-        /* ===== WHO WE HELP SECTION ===== */
-        .who-we-help {
-            margin-bottom: 60px;
-        }
-
-        .section-title {
-            font-family: var(--font-serif);
-            font-size: 36px;
-            color: var(--forest-900);
-            margin-bottom: 15px;
-            text-align: center;
-        }
-
-        .section-subtitle {
-            text-align: center;
-            color: var(--charcoal-600);
-            font-size: 18px;
-            max-width: 700px;
-            margin: 0 auto 40px;
-        }
-
-        .client-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-        }
-
-        .client-card {
-            background: white;
-            border-radius: var(--radius-lg);
-            padding: 30px;
-            box-shadow: var(--shadow-lg);
-            border: 1px solid var(--charcoal-200);
-            transition: transform 0.3s;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .client-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-xl);
-        }
-
-        .client-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, var(--forest-700), var(--gold-600));
-        }
-
-        .client-icon {
-            width: 70px;
-            height: 70px;
-            background: var(--forest-100);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 20px;
-            color: var(--forest-800);
-            font-size: 30px;
-        }
-
-        .client-name {
-            font-family: var(--font-serif);
-            font-size: 24px;
-            color: var(--forest-900);
-            margin-bottom: 10px;
-        }
-
-        .client-challenge {
-            color: var(--charcoal-600);
-            margin-bottom: 15px;
-            font-style: italic;
-        }
-
-        .client-solution {
-            color: var(--forest-700);
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        /* ===== WHAT MAKES US GREAT ===== */
-        .great-section {
-            background: var(--gold-200);
-            border-radius: var(--radius-xl);
-            padding: 60px;
-            margin-bottom: 60px;
-        }
-
-        .great-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 40px;
-            margin-top: 40px;
-        }
-
-        .great-item {
-            text-align: center;
-        }
-
-        .great-icon {
-            width: 80px;
-            height: 80px;
-            background: var(--forest-800);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 20px;
-            color: var(--gold-600);
-            font-size: 32px;
-        }
-
-        .great-item h3 {
-            color: var(--forest-900);
-            margin-bottom: 15px;
-            font-size: 22px;
-        }
-
-        .great-item p {
-            color: var(--charcoal-700);
-        }
-
-        /* ===== CARD STYLES ===== */
-        .card {
-            background: white;
-            border-radius: var(--radius-xl);
-            padding: var(--space-2xl);
-            box-shadow: var(--shadow-lg);
-            border: 1px solid var(--charcoal-200);
-            margin-bottom: var(--space-xl);
-        }
-
-        .card-header {
-            display: flex;
-            align-items: center;
-            gap: var(--space-lg);
-            margin-bottom: var(--space-xl);
-            padding-bottom: var(--space-md);
-            border-bottom: 2px solid var(--gold-200);
-        }
-
-        .card-icon {
-            width: 64px;
-            height: 64px;
-            background: var(--forest-100);
-            border-radius: var(--radius-lg);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--forest-800);
-            font-size: 32px;
-        }
-
-        .card-title {
-            font-family: var(--font-serif);
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--forest-900);
-        }
-
-        /* ===== BUTTONS ===== */
-        .btn {
-            padding: 16px 40px;
-            border-radius: var(--radius-full);
-            font-weight: 600;
-            font-size: 16px;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        .btn-primary {
-            background: var(--forest-800);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: var(--forest-900);
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-xl);
-        }
-
-        .btn-gold {
-            background: var(--gold-600);
-            color: var(--forest-900);
-        }
-
-        .btn-gold:hover {
-            background: var(--gold-700);
-            transform: translateY(-2px);
-            box-shadow: 0 12px 28px rgba(212, 175, 55, 0.3);
-        }
-
-        .btn-large {
-            padding: 18px 48px;
-            font-size: 18px;
-        }
-
-        /* ===== PROGRESS ===== */
+        /* ===== PROGRESS & NAVIGATION ===== */
         .progress-container {
             background: white;
-            padding: var(--space-lg);
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-lg);
-            margin-bottom: var(--space-xl);
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.06);
+            margin-bottom: 30px;
+            border: 1px solid var(--charcoal-200);
+        }
+
+        .progress-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            color: var(--charcoal-700);
+            font-weight: 500;
         }
 
         .progress-bar {
             height: 8px;
             background: var(--charcoal-200);
-            border-radius: var(--radius-full);
+            border-radius: 100px;
             overflow: hidden;
         }
 
@@ -485,27 +161,30 @@
             height: 100%;
             background: linear-gradient(90deg, var(--forest-700), var(--forest-500));
             width: 0%;
-            transition: width 0.3s;
+            transition: width 0.3s ease;
         }
 
         .step-indicator {
             display: flex;
             justify-content: center;
             gap: 8px;
-            margin-bottom: var(--space-xl);
+            margin-bottom: 30px;
             flex-wrap: wrap;
         }
 
         .step-dot {
-            width: 40px;
-            height: 40px;
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
             background: white;
-            border: 2px solid var(--charcoal-300);
+            color: var(--charcoal-600);
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 600;
+            font-size: 1.125rem;
+            transition: all 0.3s;
+            border: 2px solid var(--charcoal-300);
             cursor: pointer;
         }
 
@@ -522,12 +201,147 @@
             color: white;
         }
 
-        /* ===== RATING SCALE ===== */
+        .step-dot.completed::after {
+            content: '✓';
+            font-size: 1.25rem;
+        }
+
+        .step-dot.completed span {
+            display: none;
+        }
+
+        /* ===== CARDS ===== */
+        .card {
+            background: white;
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+            border: 1px solid var(--charcoal-200);
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--forest-700), var(--gold-600));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--gold-200);
+        }
+
+        .card-icon {
+            width: 64px;
+            height: 64px;
+            background: var(--forest-100);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--forest-800);
+            font-size: 32px;
+        }
+
+        .card-title {
+            font-family: var(--font-serif);
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--forest-900);
+        }
+
+        .card-subtitle {
+            color: var(--charcoal-600);
+            font-size: 1rem;
+            margin-top: 4px;
+        }
+
+        /* ===== FORM ELEMENTS ===== */
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 12px;
+            font-weight: 600;
+            color: var(--charcoal-800);
+            font-size: 1rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 14px 20px;
+            border: 2px solid var(--charcoal-300);
+            border-radius: 12px;
+            font-family: var(--font-sans);
+            font-size: 1rem;
+            transition: all 0.15s;
+            background: white;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--forest-600);
+            box-shadow: 0 0 0 4px var(--forest-100);
+        }
+
+        /* Radio Group */
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            background: var(--charcoal-100);
+            padding: 24px;
+            border-radius: 16px;
+            border: 1px solid var(--charcoal-200);
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: white;
+            border-radius: 12px;
+            border: 1px solid var(--charcoal-200);
+            transition: all 0.15s;
+            cursor: pointer;
+        }
+
+        .radio-option:hover {
+            border-color: var(--forest-400);
+            background: var(--forest-100);
+        }
+
+        .radio-option input[type="radio"] {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--forest-700);
+        }
+
+        /* Rating Scale */
         .rating-scale {
             display: flex;
-            gap: var(--space-xs);
+            gap: 8px;
             flex-wrap: wrap;
-            margin-top: var(--space-sm);
+            margin-top: 12px;
         }
 
         .rating-option {
@@ -543,10 +357,10 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: var(--space-sm) var(--space-xs);
+            padding: 12px 8px;
             background: white;
             border: 2px solid var(--charcoal-300);
-            border-radius: var(--radius-md);
+            border-radius: 12px;
             font-size: 0.875rem;
             color: var(--charcoal-700);
             cursor: pointer;
@@ -558,13 +372,20 @@
             font-weight: 700;
             font-size: 1.25rem;
             color: var(--charcoal-900);
-            margin-bottom: var(--space-2xs);
+            margin-bottom: 4px;
+        }
+
+        .rating-option label span.label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .rating-option input[type="radio"]:checked + label {
             background: var(--forest-800);
             border-color: var(--forest-800);
             color: white;
+            transform: scale(1.05);
         }
 
         .rating-option input[type="radio"]:checked + label span.value {
@@ -574,14 +395,271 @@
         .questions-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-            gap: var(--space-lg);
+            gap: 24px;
+            margin-bottom: 30px;
         }
 
         .question-item {
             background: var(--charcoal-100);
-            border-radius: var(--radius-lg);
-            padding: var(--space-lg);
+            border-radius: 16px;
+            padding: 24px;
             border: 1px solid var(--charcoal-200);
+            transition: all 0.2s;
+        }
+
+        .question-item:hover {
+            border-color: var(--forest-400);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .question-text {
+            font-weight: 600;
+            color: var(--charcoal-800);
+            margin-bottom: 16px;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        /* ===== BUTTONS ===== */
+        .btn {
+            padding: 16px 36px;
+            border-radius: 100px;
+            font-weight: 600;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-family: var(--font-sans);
+        }
+
+        .btn-primary {
+            background: var(--forest-800);
+            color: white;
+            box-shadow: 0 8px 16px rgba(27, 67, 50, 0.2);
+        }
+
+        .btn-primary:hover {
+            background: var(--forest-900);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(27, 67, 50, 0.3);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--charcoal-700);
+            border: 2px solid var(--charcoal-300);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--forest-600);
+            color: var(--forest-800);
+            background: var(--forest-100);
+            transform: translateY(-2px);
+        }
+
+        .btn-gold {
+            background: var(--gold-600);
+            color: var(--forest-900);
+            font-weight: 700;
+            box-shadow: 0 8px 16px rgba(212, 175, 55, 0.2);
+        }
+
+        .btn-gold:hover {
+            background: var(--gold-700);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(212, 175, 55, 0.3);
+        }
+
+        .btn-large {
+            padding: 18px 48px;
+            font-size: 18px;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            gap: 16px;
+        }
+
+        /* ===== REPORT STYLES ===== */
+        .report-container {
+            background: white;
+            border-radius: 32px;
+            overflow: hidden;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.1);
+        }
+
+        .report-header {
+            background: linear-gradient(135deg, var(--forest-900), var(--forest-800));
+            color: white;
+            padding: 60px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .report-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(212,175,55,0.1) 0%, transparent 70%);
+            animation: rotate 30s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .report-logo {
+            font-family: var(--font-serif);
+            font-size: 4rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .report-badge {
+            display: inline-block;
+            background: var(--gold-600);
+            color: var(--forest-900);
+            padding: 10px 30px;
+            border-radius: 100px;
+            font-weight: 700;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+        }
+
+        .score-circle {
+            width: 200px;
+            height: 200px;
+            margin: 30px auto;
+            position: relative;
+        }
+
+        .score-circle svg {
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg);
+        }
+
+        .score-circle-bg {
+            stroke: rgba(255,255,255,0.2);
+            stroke-width: 8;
+            fill: none;
+        }
+
+        .score-circle-progress {
+            stroke: var(--gold-600);
+            stroke-width: 8;
+            fill: none;
+            stroke-linecap: round;
+        }
+
+        .score-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .score-number {
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1;
+            color: white;
+        }
+
+        .pillar-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            padding: 40px;
+        }
+
+        .pillar-card {
+            background: var(--charcoal-100);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid var(--charcoal-200);
+        }
+
+        .pillar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .pillar-name {
+            font-weight: 700;
+            color: var(--forest-800);
+            font-size: 1.125rem;
+        }
+
+        .pillar-score {
+            font-weight: 800;
+            font-size: 2rem;
+            color: var(--forest-900);
+        }
+
+        .pillar-bar {
+            height: 10px;
+            background: var(--charcoal-300);
+            border-radius: 100px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .pillar-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--forest-700), var(--forest-500));
+            border-radius: 100px;
+            transition: width 1s ease;
+        }
+
+        .risk-item {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            border-left: 4px solid;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .risk-critical {
+            border-left-color: var(--danger);
+        }
+
+        .risk-high {
+            border-left-color: #FF8A5C;
+        }
+
+        .risk-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 100px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .risk-critical .risk-badge {
+            background: var(--danger);
+            color: white;
         }
 
         .footer {
@@ -593,441 +671,246 @@
         }
 
         @media (max-width: 768px) {
-            .hero-grid { grid-template-columns: 1fr; }
-            .great-grid { grid-template-columns: 1fr; }
             .brand-header { flex-direction: column; text-align: center; }
             .tagline-container { text-align: center; }
             .questions-grid { grid-template-columns: 1fr; }
+            .rating-option { min-width: 40px; }
         }
     </style>
 </head>
 <body>
     <div id="app">
         <div class="container">
-            <!-- YOUR EXACT LOGO - RISE over CONSULTING -->
+            <!-- YOUR EXACT LOGO: RISE over CONSULTING.AE -->
             <header class="brand-header">
                 <div class="logo-container">
                     <div class="logo-rise">RISE<span>.</span></div>
-                    <div class="logo-consulting">CONSULTING</div>
+                    <div class="logo-consulting">CONSULTING<span>.AE</span></div>
                 </div>
                 <div class="tagline-container">
                     <div class="tagline-main">Business Challenges? <span>Solved. Stabilized. Scaled.</span></div>
-                    <div class="tagline-sub">Strategic Clarity • Operational Excellence • Sustainable Growth</div>
+                    <div class="tagline-sub">Dubai • Abu Dhabi • Riyadh • Global</div>
                 </div>
             </header>
 
-            <!-- HERO SECTION - CLIENT-CENTRIC MESSAGING -->
-            <div class="hero-section" v-if="currentStep === 1">
-                <div class="hero-grid">
-                    <div>
-                        <h1 class="hero-title">
-                            Is Your Business<br><span>Ready to Scale?</span>
-                        </h1>
-                        <p class="hero-text">
-                            You've built something meaningful. But now you're stuck. Decisions pile up, 
-                            processes break, growth stalls. The founder trap. The chaos of success. 
-                            The plateau you can't break through.
-                        </p>
-                        <p class="hero-text" style="font-weight: 600;">
-                            We've helped 200+ companies just like yours escape the chaos and build 
-                            systems that scale. No jargon. No theory. Just what works.
-                        </p>
-                        
-                        <div class="target-badges">
-                            <span class="target-badge"><i class="fas fa-rocket"></i> Startups (0-2 yrs)</span>
-                            <span class="target-badge"><i class="fas fa-chart-line"></i> Stuck SMEs</span>
-                            <span class="target-badge"><i class="fas fa-mountain"></i> Plateaued Companies</span>
-                            <span class="target-badge"><i class="fas fa-globe"></i> Expansion Ready</span>
-                            <span class="target-badge"><i class="fas fa-building"></i> Corporate Units</span>
-                        </div>
-                        
-                        <div style="margin-top: 40px;">
-                            <button class="btn btn-gold btn-large" @click="startAssessment">
-                                <i class="fas fa-play"></i> Start Your Free Assessment
-                            </button>
-                            <p style="margin-top: 15px; font-size: 14px; opacity: 0.8;">
-                                <i class="fas fa-clock"></i> Takes 12 minutes • Confidential • No obligation
-                            </p>
-                        </div>
-                    </div>
-                    
-                    <!-- VALUE PROPOSITION -->
-                    <div class="value-prop">
-                        <h3 style="color: var(--gold-600); margin-bottom: 25px; font-size: 24px;">What Makes RISE Different</h3>
-                        
-                        <div class="value-prop-item">
-                            <div class="value-icon"><i class="fas fa-user-tie"></i></div>
-                            <div class="value-text">
-                                <h4>We've Been Where You Are</h4>
-                                <p>Former CEOs, COOs, and founders who've scaled companies from $1M to $100M+</p>
-                            </div>
-                        </div>
-                        
-                        <div class="value-prop-item">
-                            <div class="value-icon"><i class="fas fa-chart-simple"></i></div>
-                            <div class="value-text">
-                                <h4>Data-Backed, Not Theory</h4>
-                                <p>200+ assessments, 8 proprietary pillars, real benchmarks from your industry</p>
-                            </div>
-                        </div>
-                        
-                        <div class="value-prop-item">
-                            <div class="value-icon"><i class="fas fa-handshake"></i></div>
-                            <div class="value-text">
-                                <h4>We Work Alongside You</h4>
-                                <p>No drive-by consulting. We're in the trenches with your team until it works.</p>
-                            </div>
-                        </div>
-                        
-                        <div class="value-prop-item">
-                            <div class="value-icon"><i class="fas fa-gem"></i></div>
-                            <div class="value-text">
-                                <h4>GCC & Middle East Experts</h4>
-                                <p>Deep local knowledge of Dubai, Saudi, and regional market dynamics</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- WHO WE HELP SECTION -->
-            <div class="who-we-help" v-if="currentStep === 1">
-                <h2 class="section-title">Who We Help</h2>
-                <p class="section-subtitle">Every business is unique. But the patterns are predictable. See yourself below.</p>
-                
-                <div class="client-grid">
-                    <div class="client-card">
-                        <div class="client-icon"><i class="fas fa-seedling"></i></div>
-                        <h3 class="client-name">The Founder</h3>
-                        <p class="client-challenge">"I'm working 60-hour weeks and still can't get ahead. Every decision stops at my desk."</p>
-                        <div class="client-solution">
-                            <i class="fas fa-check-circle"></i> We build systems so you can work ON the business
-                        </div>
-                    </div>
-                    
-                    <div class="client-card">
-                        <div class="client-icon"><i class="fas fa-chart-line"></i></div>
-                        <h3 class="client-name">The Growth Leader</h3>
-                        <p class="client-challenge">"We're growing fast but breaking faster. Margins are shrinking, team is burning out."</p>
-                        <div class="client-solution">
-                            <i class="fas fa-check-circle"></i> We stabilize operations before scaling
-                        </div>
-                    </div>
-                    
-                    <div class="client-card">
-                        <div class="client-icon"><i class="fas fa-mountain"></i></div>
-                        <h3 class="client-name">The Plateaued CEO</h3>
-                        <p class="client-challenge">"Revenue hasn't moved in 2 years. We're stuck. Need fresh thinking and new markets."</p>
-                        <div class="client-solution">
-                            <i class="fas fa-check-circle"></i> We unlock new growth vectors
-                        </div>
-                    </div>
-                    
-                    <div class="client-card">
-                        <div class="client-icon"><i class="fas fa-globe"></i></div>
-                        <h3 class="client-name">The Expander</h3>
-                        <p class="client-challenge">"Ready to enter GCC or new markets but don't know where to start."</p>
-                        <div class="client-solution">
-                            <i class="fas fa-check-circle"></i> We guide your expansion step-by-step
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- WHAT MAKES US GREAT -->
-            <div class="great-section" v-if="currentStep === 1">
-                <h2 class="section-title" style="color: var(--forest-900);">Why Clients Trust RISE</h2>
-                <p class="section-subtitle">Not because we're smart. Because we deliver results.</p>
-                
-                <div class="great-grid">
-                    <div class="great-item">
-                        <div class="great-icon"><i class="fas fa-chart-pie"></i></div>
-                        <h3>200+ Assessments</h3>
-                        <p>Our methodology is built on real data from companies just like yours. We know the patterns before you describe them.</p>
-                    </div>
-                    
-                    <div class="great-item">
-                        <div class="great-icon"><i class="fas fa-clock"></i></div>
-                        <h3>89% Faster Results</h3>
-                        <p>Clients see measurable improvement in 90 days. Not next year. Not "someday." Within the quarter.</p>
-                    </div>
-                    
-                    <div class="great-item">
-                        <div class="great-icon"><i class="fas fa-hand-holding-heart"></i></div>
-                        <h3>94% Client Retention</h3>
-                        <p>We don't just advise. We partner. Most clients stay with us through multiple growth phases.</p>
-                    </div>
-                    
-                    <div class="great-item">
-                        <div class="great-icon"><i class="fas fa-bullseye"></i></div>
-                        <h3>8 Proven Pillars</h3>
-                        <p>Our proprietary framework covers everything from strategy to execution. Nothing falls through cracks.</p>
-                    </div>
-                    
-                    <div class="great-item">
-                        <div class="great-icon"><i class="fas fa-handshake"></i></div>
-                        <h3>No Ego Consulting</h3>
-                        <p>We don't care who gets the credit. We care that it works. Your success is our only metric.</p>
-                    </div>
-                    
-                    <div class="great-item">
-                        <div class="great-icon"><i class="fas fa-map"></i></div>
-                        <h3>GCC Market Experts</h3>
-                        <p>Local knowledge, global standards. We help international firms enter and scale in the Middle East.</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- PROGRESS & NAVIGATION (shown during assessment) -->
-            <template v-if="currentStep > 1 && currentStep < 12">
+            <!-- PROGRESS BAR -->
+            <template v-if="currentStep > 1 && currentStep < 14">
                 <div class="progress-container">
-                    <div class="flex-between" style="margin-bottom: 10px;">
-                        <span>Step {{ currentStep-1 }} of 10: {{ currentStepName }}</span>
-                        <span>{{ Math.round(((currentStep-1)/10)*100) }}% Complete</span>
+                    <div class="progress-stats">
+                        <span><i class="fas fa-flag-checkered" style="color: var(--gold-600);"></i> Step {{ currentStep-1 }} of 12: {{ currentStepName }}</span>
+                        <span><i class="fas fa-chart-pie" style="color: var(--forest-600);"></i> {{ Math.round(((currentStep-1)/12)*100) }}% Complete</span>
                     </div>
                     <div class="progress-bar">
-                        <div class="progress-fill" :style="{ width: ((currentStep-1)/10)*100 + '%' }"></div>
+                        <div class="progress-fill" :style="{ width: ((currentStep-1)/12)*100 + '%' }"></div>
                     </div>
                 </div>
 
                 <div class="step-indicator">
-                    <div v-for="n in 10" :key="n" 
+                    <div v-for="n in 12" :key="n" 
                          class="step-dot" 
-                         :class="{ active: (currentStep-1) === n, completed: (currentStep-1) > n }">
+                         :class="{ active: (currentStep-1) === n, completed: (currentStep-1) > n }"
+                         @click="jumpToStep(n+1)">
                         <span>{{ n }}</span>
                     </div>
                 </div>
             </template>
 
-            <!-- ASSESSMENT FLOW -->
+            <!-- DYNAMIC COMPONENT -->
             <component :is="currentStepComponent" 
-                       :key="currentStep"
                        :answers="answers" 
                        :qualifiers="qualifiers"
+                       :results="results"
                        @update-answer="updateAnswer"
                        @next-step="nextStep"
                        @prev-step="prevStep"
                        @complete="completeAssessment"
-                       @show-toast="showToast">
+                       @restart="restart">
             </component>
 
             <!-- FOOTER -->
             <footer class="footer">
-                <div class="logo-rise" style="font-size: 24px; margin-bottom: 20px;">RISE<span>.</span></div>
-                <div class="logo-consulting" style="letter-spacing: 4px; margin-bottom: 20px;">CONSULTING</div>
+                <div class="logo-rise" style="font-size: 32px; margin-bottom: 15px;">RISE<span>.</span></div>
+                <div class="logo-consulting" style="letter-spacing: 4px; margin-bottom: 20px;">CONSULTING<span>.AE</span></div>
                 <p style="margin-bottom: 10px;">Business Challenges? Solved. Stabilized. Scaled.</p>
-                <p style="color: var(--charcoal-400);">© 2026 RISE Consulting. All rights reserved.</p>
+                <p style="color: var(--charcoal-400);">© 2026 RISE Consulting.AE. All rights reserved.</p>
             </footer>
-        </div>
-
-        <!-- TOAST NOTIFICATIONS -->
-        <div class="toast-container" style="position: fixed; bottom: 20px; right: 20px; z-index: 1000;">
-            <div v-for="(toast, index) in toasts" :key="index" 
-                 style="background: white; border-radius: 8px; padding: 12px 24px; margin-top: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border-left: 4px solid var(--forest-700);">
-                <i :class="toast.icon" style="margin-right: 10px;"></i>
-                <span>{{ toast.message }}</span>
-            </div>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
     <script>
-        // QUESTION BANK (simplified for demo - full 106 questions in production)
+        // ============================================
+        // COMPLETE QUESTION BANK - 106 Questions
+        // ============================================
         const QUESTION_BANK = {
+            firmographics: [
+                { id: 'Q1', question: 'What is your annual revenue?', type: 'select', 
+                  options: [
+                      { value: 'a', label: '< $500k' },
+                      { value: 'b', label: '$500k - $2M' },
+                      { value: 'c', label: '$2M - $10M' },
+                      { value: 'd', label: '$10M - $50M' },
+                      { value: 'e', label: '> $50M' }
+                  ]},
+                { id: 'Q2', question: 'How many full-time employees?', type: 'select',
+                  options: [
+                      { value: 'a', label: '1-5' },
+                      { value: 'b', label: '6-20' },
+                      { value: 'c', label: '21-50' },
+                      { value: 'd', label: '51-200' },
+                      { value: 'e', label: '200+' }
+                  ]},
+                { id: 'Q3', question: 'Years in operation?', type: 'select',
+                  options: [
+                      { value: 'a', label: '0-2 years' },
+                      { value: 'b', label: '3-5 years' },
+                      { value: 'c', label: '6-10 years' },
+                      { value: 'd', label: '10+ years' }
+                  ]},
+                { id: 'Q4', question: 'Is the company founder-led?', type: 'select',
+                  options: [
+                      { value: 'Yes', label: 'Yes - founder actively involved' },
+                      { value: 'No', label: 'No - professional management' },
+                      { value: 'Hybrid', label: 'Founder + leadership team' }
+                  ]},
+                { id: 'Q5', question: 'Primary business model?', type: 'select',
+                  options: [
+                      { value: 'a', label: 'Service-based (B2B)' },
+                      { value: 'b', label: 'Service-based (B2C)' },
+                      { value: 'c', label: 'Product-based (physical)' },
+                      { value: 'd', label: 'Product-based (digital/SaaS)' },
+                      { value: 'e', label: 'Hybrid/mixed' }
+                  ]},
+                { id: 'Q6', question: 'Customer concentration?', type: 'select',
+                  options: [
+                      { value: 'a', label: '1-2 clients dominate (>50% revenue)' },
+                      { value: 'b', label: '3-5 key clients' },
+                      { value: 'c', label: 'Diversified (6-20 clients)' },
+                      { value: 'd', label: 'High volume (100+ clients)' },
+                      { value: 'e', label: 'Mass market (1000+ customers)' }
+                  ]},
+                { id: 'Q7', question: 'Growth ambition (next 24 months)?', type: 'select',
+                  options: [
+                      { value: 'a', label: 'Stability/control' },
+                      { value: 'b', label: 'Moderate growth (10-30%)' },
+                      { value: 'c', label: 'Aggressive growth (30-100%)' },
+                      { value: 'd', label: 'Scale/expand (new markets)' },
+                      { value: 'e', label: 'Exit preparation' }
+                  ]}
+            ],
+            
             pillars: [
-                { id: 'strategy', name: 'Strategic Clarity', icon: 'fa-bullseye', weight: 15 },
-                { id: 'leadership', name: 'Leadership & Governance', icon: 'fa-users-cog', weight: 15 },
-                { id: 'operations', name: 'Operations & Process', icon: 'fa-cogs', weight: 15 },
-                { id: 'finance', name: 'Financial Visibility', icon: 'fa-chart-line', weight: 15 },
-                { id: 'cx', name: 'Customer Experience', icon: 'fa-heart', weight: 12 },
-                { id: 'brand', name: 'Brand & Market', icon: 'fa-tag', weight: 8 },
-                { id: 'team', name: 'Team & Capability', icon: 'fa-user-friends', weight: 12 },
-                { id: 'growth', name: 'Growth Readiness', icon: 'fa-rocket', weight: 8 }
-            ]
-        };
-
-        // Step 1: Welcome/Hero (already shown above)
-        const Step1Welcome = { template: '<div></div>' };
-
-        // Step 2: Client Info
-        const Step2ClientInfo = {
-            template: `
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-icon"><i class="fas fa-building"></i></div>
-                        <div>
-                            <div class="card-title">Your Information</div>
-                            <div style="color: var(--charcoal-600);">Confidential • Used only for your report</div>
-                        </div>
-                    </div>
-                    
-                    <div style="margin-bottom: 20px;">
-                        <label style="display: block; margin-bottom: 8px; font-weight: 600;">Company Name</label>
-                        <input type="text" class="form-input" v-model="company" placeholder="e.g., Acme Corporation" 
-                               style="width: 100%; padding: 12px; border: 2px solid var(--charcoal-300); border-radius: 8px;">
-                    </div>
-                    
-                    <div style="margin-bottom: 20px;">
-                        <label style="display: block; margin-bottom: 8px; font-weight: 600;">Your Name</label>
-                        <input type="text" class="form-input" v-model="name" placeholder="e.g., Jane Smith"
-                               style="width: 100%; padding: 12px; border: 2px solid var(--charcoal-300); border-radius: 8px;">
-                    </div>
-                    
-                    <div style="margin-bottom: 20px;">
-                        <label style="display: block; margin-bottom: 8px; font-weight: 600;">Email</label>
-                        <input type="email" class="form-input" v-model="email" placeholder="jane@acme.com"
-                               style="width: 100%; padding: 12px; border: 2px solid var(--charcoal-300); border-radius: 8px;">
-                    </div>
-                    
-                    <div class="flex-between" style="margin-top: 30px;">
-                        <button class="btn btn-secondary" @click="$emit('prev-step')">Back</button>
-                        <button class="btn btn-primary" @click="next" :disabled="!isValid">Continue</button>
-                    </div>
-                </div>
-            `,
-            data() {
-                return { company: '', name: '', email: '' };
-            },
-            computed: {
-                isValid() {
-                    return this.company && this.name && this.email && this.email.includes('@');
-                }
-            },
-            methods: {
-                next() {
-                    this.$emit('update-answer', { id: 'company', value: this.company });
-                    this.$emit('update-answer', { id: 'name', value: this.name });
-                    this.$emit('update-answer', { id: 'email', value: this.email });
-                    this.$emit('next-step');
-                }
-            }
-        };
-
-        // Step 3-11: Pillar Steps (simplified)
-        const PillarStep = {
-            props: ['pillar'],
-            template: `
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-icon"><i :class="['fas', pillar.icon]"></i></div>
-                        <div>
-                            <div class="card-title">{{ pillar.name }}</div>
-                            <div style="color: var(--charcoal-600);">Rate each statement from 1 (Not in place) to 5 (Strong)</div>
-                        </div>
-                    </div>
-                    
-                    <div v-for="n in 5" :key="n" class="question-item" style="margin-bottom: 15px;">
-                        <div style="margin-bottom: 10px;">Example question {{ n }} for {{ pillar.name }}</div>
-                        <div class="rating-scale">
-                            <div v-for="rating in 5" :key="rating" class="rating-option">
-                                <input type="radio" :id="'q'+n+'_'+rating" :name="'q'+n" :value="rating" v-model="ratings['q'+n]">
-                                <label :for="'q'+n+'_'+rating">
-                                    <span class="value">{{ rating }}</span>
-                                    <span class="label">{{ ['Not','Weak','Basic','Strong','Best'][rating-1] }}</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="flex-between" style="margin-top: 30px;">
-                        <button class="btn btn-secondary" @click="$emit('prev-step')">Back</button>
-                        <button class="btn btn-primary" @click="next">Continue</button>
-                    </div>
-                </div>
-            `,
-            data() {
-                return { ratings: {} };
-            },
-            methods: {
-                next() {
-                    this.$emit('next-step');
-                }
-            }
-        };
-
-        // Step 12: Complete
-        const StepComplete = {
-            template: `
-                <div class="card" style="text-align: center;">
-                    <div class="card-icon" style="margin: 0 auto 20px; width: 80px; height: 80px;">
-                        <i class="fas fa-check-circle" style="font-size: 40px; color: var(--forest-700);"></i>
-                    </div>
-                    <h2 class="card-title">Thank You!</h2>
-                    <p style="font-size: 18px; margin: 20px 0;">Your assessment is complete.</p>
-                    <p style="color: var(--charcoal-600); margin-bottom: 30px;">
-                        A RISE consultant will review your results and contact you within 24 hours with your personalized strategic report.
-                    </p>
-                    <button class="btn btn-gold" @click="$emit('restart')">Start New Assessment</button>
-                </div>
-            `
-        };
-
-        // Main Vue App
-        new Vue({
-            el: '#app',
-            data: {
-                currentStep: 1,
-                answers: {},
-                qualifiers: {},
-                toasts: []
-            },
-            computed: {
-                currentStepName() {
-                    const names = ['Welcome','Your Info','Strategy','Leadership','Operations','Finance','Customer','Brand','Team','Growth','Review','Complete'];
-                    return names[this.currentStep-1] || '';
+                {
+                    id: 'strategy',
+                    name: 'Strategic Clarity',
+                    icon: 'fa-bullseye',
+                    weight: 0.15,
+                    questions: [
+                        { id: 'S1', text: 'Is the company\'s long-term vision clearly defined?' },
+                        { id: 'S2', text: 'Is there a documented 3-5 year strategic plan?' },
+                        { id: 'S3', text: 'Is the target market clearly defined?' },
+                        { id: 'S4', text: 'Is the company positioned clearly against competitors?' },
+                        { id: 'S5', text: 'Are core services/products clearly defined?' },
+                        { id: 'S6', text: 'Are growth priorities clear for next 12-24 months?' },
+                        { id: 'S7', text: 'Are strategic decisions based on data rather than intuition?' },
+                        { id: 'S8', text: 'Is strategy communicated clearly across leadership?' },
+                        { id: 'S9', text: 'Is strategy reviewed and updated regularly?' },
+                        { id: 'S10', text: 'Are new market opportunities evaluated systematically?', branch: { q: 'Q3', op: '>=', val: 'c' } },
+                        { id: 'S11', text: 'Is there a defined expansion strategy?', branch: { q: 'Q3', op: '>=', val: 'c' } },
+                        { id: 'S12', text: 'Are strategic risks actively monitored?', branch: { q: 'Q1', op: '>=', val: 'c' } }
+                    ]
                 },
-                currentStepComponent() {
-                    if (this.currentStep === 1) return 'Step1Welcome';
-                    if (this.currentStep === 2) return 'Step2ClientInfo';
-                    if (this.currentStep === 12) return 'StepComplete';
-                    
-                    // Dynamic pillar steps
-                    const pillars = QUESTION_BANK.pillars;
-                    const pillarIndex = this.currentStep - 3;
-                    if (pillarIndex >= 0 && pillarIndex < pillars.length) {
-                        return {
-                            extends: PillarStep,
-                            data: () => ({ pillar: pillars[pillarIndex] })
-                        };
-                    }
-                    return 'Step1Welcome';
-                }
-            },
-            methods: {
-                startAssessment() {
-                    this.currentStep = 2;
-                    this.showToast({ message: 'Let\'s begin your assessment', icon: 'fas fa-play' });
+                {
+                    id: 'leadership',
+                    name: 'Leadership & Governance',
+                    icon: 'fa-users-cog',
+                    weight: 0.15,
+                    questions: [
+                        { id: 'L1', text: 'Are leadership roles clearly defined?' },
+                        { id: 'L2', text: 'Is there a clear hierarchy for decision-making?' },
+                        { id: 'L3', text: 'Are responsibilities clearly distributed among leaders?', branch: { q: 'Q2', op: '>=', val: 'b' } },
+                        { id: 'L4', text: 'Does leadership meet regularly to review performance?' },
+                        { id: 'L5', text: 'Is the founder involved in every major decision?', branch: { q: 'Q4', op: '==', val: 'Yes' } },
+                        { id: 'L6', text: 'Are leadership objectives aligned with strategy?' },
+                        { id: 'L7', text: 'Are leadership conflicts resolved through structured processes?', branch: { q: 'Q2', op: '>=', val: 'c' } },
+                        { id: 'L8', text: 'Are leaders accountable for measurable outcomes?' },
+                        { id: 'L9', text: 'Are leadership responsibilities documented?' },
+                        { id: 'L10', text: 'Is leadership succession planning considered?', branch: { q: 'Q2', op: '>=', val: 'd' } },
+                        { id: 'L11', text: 'Does leadership encourage strategic thinking within teams?' },
+                        { id: 'L12', text: 'Are leadership performance reviews conducted regularly?', branch: { q: 'Q2', op: '>=', val: 'b' } }
+                    ]
                 },
-                updateAnswer(payload) {
-                    this.$set(this.answers, payload.id, payload.value);
+                {
+                    id: 'operations',
+                    name: 'Operations & Process',
+                    icon: 'fa-cogs',
+                    weight: 0.15,
+                    questions: [
+                        { id: 'O1', text: 'Are operational processes clearly documented?' },
+                        { id: 'O2', text: 'Are SOPs available for core activities?' },
+                        { id: 'O3', text: 'Are service delivery steps clearly defined?', branch: { q: 'Q5', op: 'in', val: ['a', 'b', 'e'] } },
+                        { id: 'O4', text: 'Are workflows consistent across teams?', branch: { q: 'Q2', op: '>=', val: 'b' } },
+                        { id: 'O5', text: 'Are operational bottlenecks monitored and addressed?' },
+                        { id: 'O6', text: 'Are tasks assigned clearly to specific roles?' },
+                        { id: 'O7', text: 'Is operational performance measured regularly?' },
+                        { id: 'O8', text: 'Are there systems to track project delivery?' },
+                        { id: 'O9', text: 'Are operational improvements reviewed regularly?' },
+                        { id: 'O10', text: 'Is technology used for operational efficiency?' },
+                        { id: 'O11', text: 'Are service delivery standards defined?', branch: { q: 'Q5', op: 'in', val: ['a', 'b', 'e'] } },
+                        { id: 'O12', text: 'Is operational performance reviewed with leadership?' }
+                    ]
                 },
-                nextStep() {
-                    if (this.currentStep < 12) {
-                        this.currentStep++;
-                        window.scrollTo(0, 0);
-                    }
+                {
+                    id: 'finance',
+                    name: 'Financial Visibility',
+                    icon: 'fa-chart-line',
+                    weight: 0.15,
+                    questions: [
+                        { id: 'F1', text: 'Are financial reports produced regularly?' },
+                        { id: 'F2', text: 'Are profit margins monitored by service/product?' },
+                        { id: 'F3', text: 'Is cash flow visibility available to leadership?' },
+                        { id: 'F4', text: 'Are cost structures clearly understood?' },
+                        { id: 'F5', text: 'Are budgets prepared and monitored?', branch: { q: 'Q1', op: '>=', val: 'b' } },
+                        { id: 'F6', text: 'Are financial forecasts prepared?', branch: { q: 'Q1', op: '>=', val: 'b' } },
+                        { id: 'F7', text: 'Is financial performance reviewed by leadership?' },
+                        { id: 'F8', text: 'Are pricing decisions based on cost analysis?' },
+                        { id: 'F9', text: 'Are financial risks identified?', branch: { q: 'Q1', op: '>=', val: 'c' } },
+                        { id: 'F10', text: 'Are payment cycles managed effectively?' },
+                        { id: 'F11', text: 'Are financial systems integrated with operations?', branch: { q: 'Q2', op: '>=', val: 'c' } },
+                        { id: 'F12', text: 'Is financial accountability clearly defined?' }
+                    ]
                 },
-                prevStep() {
-                    if (this.currentStep > 1) {
-                        this.currentStep--;
-                        window.scrollTo(0, 0);
-                    }
+                {
+                    id: 'cx',
+                    name: 'Customer Experience',
+                    icon: 'fa-heart',
+                    weight: 0.12,
+                    questions: [
+                        { id: 'CX1', text: 'Is the client journey clearly defined?' },
+                        { id: 'CX2', text: 'Are client expectations clearly communicated?' },
+                        { id: 'CX3', text: 'Is customer satisfaction measured systematically?' },
+                        { id: 'CX4', text: 'Are complaints systematically tracked?' },
+                        { id: 'CX5', text: 'Are service quality standards documented?' },
+                        { id: 'CX6', text: 'Is client feedback used to improve services?' },
+                        { id: 'CX7', text: 'Are retention strategies actively implemented?' },
+                        { id: 'CX8', text: 'Are key clients managed through relationship programs?', branch: { q: 'Q6', op: 'in', val: ['a', 'b'] } },
+                        { id: 'CX9', text: 'Are onboarding processes clearly defined?' },
+                        { id: 'CX10', text: 'Are communication standards established?' },
+                        { id: 'CX11', text: 'Is repeat business tracked?', branch: { q: 'Q3', op: '>=', val: 'b' } },
+                        { id: 'CX12', text: 'Are client success stories documented?' },
+                        { id: 'CX13', text: 'Is customer churn analyzed for root causes?' }
+                    ]
                 },
-                completeAssessment() {
-                    this.currentStep = 12;
-                    this.showToast({ message: 'Assessment complete!', icon: 'fas fa-check-circle' });
-                },
-                showToast({ message, icon }) {
-                    this.toasts.push({ message, icon });
-                    setTimeout(() => this.toasts.shift(), 3000);
-                }
-            },
-            components: {
-                Step1Welcome,
-                Step2ClientInfo,
-                StepComplete
-            }
-        });
-    </script>
-</body>
-</html>
+                {
+                    id: 'brand',
+                    name: 'Brand & Market',
+                    icon: 'fa-tag',
+                    weight: 0.08,
+                    questions: [
+                        { id: 'B1', text: 'Is brand positioning clearly defined?' },
+                        { id: 'B2', text: 'Is there a clear value proposition?' },
+                        { id: 'B3', text: 'Is the company recognized for specific expertise?' },
+                        { id: 'B4', text: 'Are marketing messages consistent across channels?' },
+                        { id: 'B5', text: 'Is there a professional online presence?' },
+                        { id: 'B6', text: 'Are marketing activities aligned with strategy?' },
+                        { id: 'B7', text: 'Is the company differentiated from competitors?'
